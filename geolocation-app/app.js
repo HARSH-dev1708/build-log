@@ -11,6 +11,27 @@ const getPosition = () => {
     });
 };
 
+// We wrapped getCurrentPosition in Promise to user modern js asynchronous tool i.e, async/await
+// const getPosition = () => {
+
+//     return new Promise((resolve, reject) => {
+
+//         navigator.geolocation.getCurrentPosition(
+
+//             (position) => {
+//                 resolve(position);
+//             },
+
+//             (error) => {
+//                 reject(error);
+//             }
+
+//         );
+
+//     });
+
+// };
+
 // 2. Use modern async/await syntax
 btn.addEventListener('click', async () => {
     if (navigator.geolocation) {
