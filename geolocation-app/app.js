@@ -32,7 +32,7 @@ const getPosition = () => {
 
 // };
 
-const apiKey = "4814201264be49a0a16d92ca7f75adf0";
+const apiKey = "YOUR_API_KEY";
 
 // 2. Use modern async/await syntax
 btn.addEventListener('click', async () => {
