@@ -32,6 +32,8 @@ const getPosition = () => {
 
 // };
 
+const apiKey = "4814201264be49a0a16d92ca7f75adf0";
+
 // 2. Use modern async/await syntax
 btn.addEventListener('click', async () => {
     if (navigator.geolocation) {
@@ -40,6 +42,16 @@ btn.addEventListener('click', async () => {
             const position = await getPosition(); 
             const { latitude, longitude} = position.coords;
             para.textContent = `the latitude: ${latitude}, the longitude: ${longitude}`;
+            const response = await fetch(
+                `https://api.opencagedata.com/geocode/v1/json?key=${apiKey}&q=${latitude}+${longitude}`
+            );
+            const data = await response.json();
+            console.log(data);
+            const location = data.results[0].formatted;
+            console.log(location);
+            const addressPara = document.createElement("p");
+            addressPara.textContent = `📍 ${location}`;
+            document.querySelector(".container").appendChild(addressPara);
             // console.log(position.coords.latitude);
             // console.log(position.coords.longitude);
         } catch (error) {
