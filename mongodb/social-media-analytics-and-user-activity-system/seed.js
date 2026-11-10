@@ -77,5 +77,9 @@ db.activity_logs.insertMany([
   { userId: u["arjun_k"], type: "login",     timestamp: new Date("2026-10-26T09:10:00Z"), meta: { device: "web" } }
 ]);
 
+// ---------- constraints ----------
+db.likes.createIndex({ postId: 1, userId: 1 }, { unique: true });
+db.follows.createIndex({ followerId: 1, followeeId: 1 }, { unique: true });
+db.comments.createIndex({ postId: 1, createdAt: -1 });
 
 print("seed complete")
