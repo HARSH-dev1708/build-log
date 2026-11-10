@@ -42,5 +42,12 @@ function comment(user, post, text){
 }
 
 // ------------- posts ------------------
+addPost("sunset",   "riya_s",  "Sunset at India Gate",      ["delhi", "sunset", "travel"], "2026-10-20T18:30:00Z");
+addPost("match",    "arjun_k", "Match day vibes",           ["cricket", "india"],          "2026-10-21T09:00:00Z");
+addPost("portrait", "meera_p", "Golden hour portrait",      ["photography", "sunset"],     "2026-10-22T17:45:00Z");
+addPost("mongo",    "dev_r",   "Learning MongoDB!",         ["coding", "mongodb"],         "2026-10-23T12:00:00Z");
+addPost("winter",   "neha_g",  "Winter collection drop",    ["fashion", "winter"],         "2026-10-24T10:15:00Z");
+addPost("food",     "sam_t",   "Best street food in Delhi", ["food", "delhi"],             "2026-10-25T20:00:00Z");
+addPost("diary",    "riya_s",  "Private travel diary",      ["travel"],                    "2026-10-26T08:00:00Z", false);
 
 print("seed complete")
