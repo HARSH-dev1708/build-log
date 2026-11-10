@@ -16,4 +16,31 @@ const u = {};
     u[doc.username] = db.users.insertOne(doc).insertedId;
 });
 
+// ------------- helpers ------------------
+const p = {};
+function addPost(key, author, text, hashtags, createdAt, isPublic = true){
+    p[key] = db.posts.insertOne({
+        authorId: u[author], authorUsername: author, text, hashtags, isPublic,
+        likesCount: 0, commentsCount: 0, createdAt: new Date(createdAt)
+    }).insertedId;
+}
+
+function follow(a, b){
+    db.follows.insertOne({ followerId: u[a], followeeId: u[b], createdAt: new Date() });
+    db.users.updateOne({ _id: u[a] }, { $inc: {followingCount: 1 } });
+    db.users.updateOne({ _id: u[b] }, { $inc: {followersCount: 1 } });
+}
+
+function like(user, post){
+    db.likes.insertOne({ userId: u[user], postId: p[post], createdAt: new Date() });
+    db.posts.updateOne({ _id: p[post] }, { $inc: { likesCount: 1 } })
+}
+
+function comment(user, post, text){
+    db.comments.insertOne({ userId: u[user], postId: p[post], text, likesCount: 0, createdAt: new Date() });
+    db.posts.updateOne({ _id: p[post] }, { $inc: { commentsCount: 1 } })
+}
+
+// ------------- posts ------------------
+
 print("seed complete")
