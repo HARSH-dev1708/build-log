@@ -50,4 +50,32 @@ addPost("winter",   "neha_g",  "Winter collection drop",    ["fashion", "winter"
 addPost("food",     "sam_t",   "Best street food in Delhi", ["food", "delhi"],             "2026-10-25T20:00:00Z");
 addPost("diary",    "riya_s",  "Private travel diary",      ["travel"],                    "2026-10-26T08:00:00Z", false);
 
+
+// ------------- follows ------------------
+[["arjun_k","riya_s"],["sam_t","riya_s"],["meera_p","riya_s"],
+ ["riya_s","neha_g"],["meera_p","neha_g"],["sam_t","neha_g"],["arjun_k","neha_g"],["dev_r","neha_g"],
+ ["dev_r","meera_p"],["riya_s","meera_p"]].forEach(([a, b]) => follow(a, b));
+
+// ------------- likes ------------------
+[["arjun_k","sunset"],["sam_t","sunset"],["meera_p","sunset"],
+ ["riya_s","portrait"],["neha_g","portrait"],["sam_t","portrait"],["dev_r","portrait"],
+ ["riya_s","winter"],["meera_p","winter"],["arjun_k","winter"],["sam_t","winter"],["dev_r","winter"],
+ ["riya_s","food"],["arjun_k","match"],["neha_g","mongo"]].forEach(([user, post]) => like(user, post));
+
+// ------------- comments ------------------
+comment("arjun_k", "sunset",   "Beautiful!");
+comment("sam_t",   "sunset",   "Love this");
+comment("riya_s",  "portrait", "Stunning shot");
+comment("riya_s",  "winter",   "Need this");
+comment("meera_p", "winter",   "Gorgeous");
+comment("neha_g",  "mongo",    "Good luck!");
+
+// ------------- activity logs ------------------
+db.activity_logs.insertMany([
+  { userId: u["riya_s"],  type: "login",     timestamp: new Date("2026-10-26T07:55:00Z"), meta: { device: "mobile" } },
+  { userId: u["riya_s"],  type: "view_post", postId: p["winter"], timestamp: new Date("2026-10-26T08:02:00Z"), meta: {} },
+  { userId: u["arjun_k"], type: "login",     timestamp: new Date("2026-10-26T09:10:00Z"), meta: { device: "web" } }
+]);
+
+
 print("seed complete")
