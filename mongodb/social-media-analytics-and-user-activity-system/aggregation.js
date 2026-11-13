@@ -124,3 +124,33 @@ show("10. Top commenters", db.comments.aggregate([
   { $project: { _id: 0, username: "$user.username", comments: 1 } }
 ]));
 
+
+// 11. Activity per user (join activity_logs with users)
+show("11. Activity per user", db.activity_logs.aggregate([
+    { $lookup: { from: "users", localField: "userId", foreignField: "_id", as: "user" } },
+    { $unwind: "$user" },
+    { $group: { _id: "$user.username", actions: { $sum: 1 }, lastAction: { $max: "$timestamp" }, typeOfActions: { $addToSet: "$type" } } },
+    { $sort: { actions: -1, _id: 1 } }
+]));
+
+// 12. $bucket: users grouped by follower ranges
+show("12. Follower ranges ($bucket)", db.users.aggregate([
+  { $bucket: { groupBy: "$followersCount", boundaries: [0, 1, 3, 10],
+               output: { users: { $sum: 1 }, names: { $push: "$username" } } } }
+]));
+
+// 13. $facet: several results from one query (dashboard)
+show("13. Dashboard ($facet)", db.posts.aggregate([
+  { $match: { isPublic: true } },
+  { $facet: {
+      topPosts:   [ { $sort: { likesCount: -1 } }, { $limit: 2 }, { $project: { _id: 0, text: 1, likesCount: 1 } } ],
+      totals:     [ { $group: { _id: null, posts: { $sum: 1 }, likes: { $sum: "$likesCount" } } } ],
+      byAuthor:   [ { $group: { _id: "$authorUsername", posts: { $sum: 1 } } }, { $sort: { _id: 1 } } ]
+  } }
+]));
+
+// 14. $setWindowFields: rank users by followers
+show("14. Follower ranking ($setWindowFields)", db.users.aggregate([
+  { $setWindowFields: { sortBy: { followersCount: -1 }, output: { rank: { $rank: {} } } } },
+  { $project: { _id: 0, username: 1, followersCount: 1, rank: 1 } }
+]));
