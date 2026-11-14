@@ -1,0 +1,7 @@
+﻿Run at: 2026-11-14T16:03:11.067Z
+Documents in posts: 100000
+Indexes: _id_
+
+A: posts of one user             | COLLSCAN                           | examined: 100000 | returned:    10 | 106 ms
+B: top 10 travel posts by likes  | SORT>COLLSCAN                      | examined: 100000 | returned:    10 | 283 ms
+C: latest 20 posts this week     | SORT>COLLSCAN                      | examined: 100000 | returned:    20 | 309 ms

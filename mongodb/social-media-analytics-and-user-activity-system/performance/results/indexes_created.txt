@@ -1,0 +1,3 @@
+﻿Creating indexes on social_perf.posts ...
+Indexes now on posts: _id_, authorId_1_createdAt_-1, hashtags_1_isPublic_1_likesCount_-1, createdAt_-1
+Total index size: 5.4 MB

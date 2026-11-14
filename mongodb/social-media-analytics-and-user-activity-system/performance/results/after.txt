@@ -1,0 +1,7 @@
+﻿Run at: 2026-11-14T16:03:16.695Z
+Documents in posts: 100000
+Indexes: _id_, authorId_1_createdAt_-1, hashtags_1_isPublic_1_likesCount_-1, createdAt_-1
+
+A: posts of one user             | FETCH>IXSCAN                       | examined:     10 | returned:    10 | 0 ms
+B: top 10 travel posts by likes  | LIMIT>FETCH>IXSCAN                 | examined:     10 | returned:    10 | 2 ms
+C: latest 20 posts this week     | LIMIT>FETCH>IXSCAN                 | examined:     20 | returned:    20 | 0 ms
