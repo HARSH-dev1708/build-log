@@ -17,12 +17,11 @@ Total index size: 5.4 MB
 
 ## Before vs after
 
-
 | Query | Stage before | Docs examined before | Time before | Stage after | Docs examined after | Time after |
 |---|---|---|---|---|---|---|
-| A: posts of one user            | 106 ms | 0 ms |
-| B: top 10 travel posts by likes | 283 ms | 2 ms |
-| C: latest 20 posts this week    | 309 ms | 0 ms |
+| A: posts of one user | COLLSCAN | 100000 | 106ms | FETCH>IXSCAN  | 10 | 0ms |
+| B: top 10 travel posts by likes | SORT>COLLSCAN | 100000 | 283ms | LIMIT>FETCH>IXSCAN | 10 | 2ms |
+| C: latest 20 posts this week | SORT>COLLSCAN | 100000 | 309ms | LIMIT>FETCH>IXSCAN | 10 | 0ms |
 
 ## Observations
 
@@ -47,13 +46,12 @@ Total index size: 5.4 MB
 
 4. What is the cost of these indexes (size on disk, slower writes)?
     Total index size: 5.4 MB
-    Disk and memory: each index is a separate structure stored next to the data.
-    The hashtags index is the biggest, because it’s multikey and has an entry for every hashtag of every post, roughly 190,000 entries.
-    
-    Slower writes: every insert, update, and delete must also update every index that covers the changed fields. 
-    For example:
-    a. Inserting a post updates all 3 new indexes, plus _id.
-    b. Changing likesCount (every like) updates the hashtags_1_isPublic_1_likesCount_-1 index, because likesCount is part of it.
+    Disk and memory: each index is a separate structure stored next to the data. Check the “Total index size” line in indexes_created.txt. I’d expect several MB for 100,000 posts. The hashtags index is the biggest, because it’s multikey and has an entry for every hashtag of every post, roughly 190,000 entries.
+
+    Slower writes: every insert, update, and delete must also update every index that covers the changed fields. For example:
+
+    Inserting a post updates all 3 new indexes, plus _id.
+    Changing likesCount (every like) updates the hashtags_1_isPublic_1_likesCount_-1 index, because likesCount is part of it.
 
     The trade-off: indexes make reads much faster and writes a bit slower. That’s worth it for queries you run often and a waste for ones you never run. An index no query uses is pure cost. db.posts.aggregate([{ $indexStats: {} }]) shows how often each index has actually been used.
 
