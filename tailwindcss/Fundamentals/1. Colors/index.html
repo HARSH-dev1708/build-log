@@ -25,10 +25,11 @@
     <p class="text-sky-700">Tailwind</p>
     <p class="text-sky-800">Tailwind</p>
     <p class="text-sky-900">Tailwind</p>
+    <p class="text-sky-950">Tailwind</p>
 
     <br></br>
     <h1>2. Background Colors</h1>
-    <p class="bg-sky-50text-white">Tailwind</p>
+    <p class="bg-sky-50 text-white">Tailwind</p>
     <p class="bg-sky-100 text-white">Tailwind</p>
     <p class="bg-sky-200 text-white">Tailwind</p>
     <p class="bg-sky-300 text-white">Tailwind</p>
@@ -39,7 +40,13 @@
     <p class="bg-sky-800 text-white">Tailwind</p>
     <p class="bg-sky-900 text-white">Tailwind</p>
 
-    <br>
+    <br></br>
+    <label>
+      Name:
+      <input class="bg-yellow-100 text-sky-700 p-1" type="text" checked  placeholder="text box Bg color" /> 
+    </label>
+
+    <br></br>
 
     <h1>3. Accent Colors</h1>
     <label>
@@ -47,22 +54,28 @@
         Browser default
     </label>
     <label class="text-sky-700 bg-sky-100 p-2 rounded">
-      <input class="accent-pink-600" type="checkbox" checked />
+      <input class="accent-pink-600/50 hover:accent-pink-600/80" type="checkbox" checked />
         Customized
     </label>
   
     <br></br>
 
     <h1>4. Text Decoration</h1>
-    <p class="underline decoration-sky-300">Tailwind</p>
+    <p class="underline decoration-sky-300 decoration-wavy">Tailwind</p>
 
     <br></br>
     <h1 class="min-h-50px mb-4">5. Border Colors and Outline Colors</h1>
-    <label class="border-2 border-sky-300 p-2 rounded outline-2 outline-sky-600">
-      <input type="checkbox" checked />
-        Tailwind
-    </label>
+    <button class="border-2 border-indigo-500/100">Button A</button>
+    <br></br>
+    <button class="outline outline-2 outline-offset-2 outline-blue-500">Button B</button>
+    <br></br>
+    <button class="border-2 border-indigo-500/100 outline outline-3 outline-pink-500">Button C</button> 
 
+    <br></br>
+    <h1>6. Arbitrary Values</h1>
+    <p class="text-[#ff0000]">[#ff0000]</p>
+    <p class="bg-[#0ff]">[#0ff]</p>
+    <p class="bg-[#CCCCFF]">Periwinkle hex code: #C8A2C8</p>
     <!-- 1. Colors With Different Shades -->
     <!-- https://tailwindcss.com/docs/customizing-colors  -->
 
