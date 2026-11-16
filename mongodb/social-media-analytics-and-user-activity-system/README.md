@@ -166,7 +166,7 @@ IMPORTANT NOTES:
 
 
 ---------------------------------------------------------------------
-9. AGGREGATION ANALYTICS (aggregations.js)
+7. AGGREGATION ANALYTICS (aggregations.js)
 ---------------------------------------------------------------------
   1.  Trending hashtags               $match, $unwind, $group, $sort
   2.  Top users by likes received     $group, $sort, $limit
@@ -183,31 +183,14 @@ IMPORTANT NOTES:
   13. Follower ranking                $setWindowFields, $rank
 
 
----------------------------------------------------------------------
-10. LIMITATIONS
----------------------------------------------------------------------
-  - The sample dataset is small (6 users, 7 posts), so analytics
-    results are illustrative only.
-  - Counters are updated by separate operations and are not yet
-    protected by transactions, so they could become inconsistent
-    if an operation fails midway.
-  - Validation is applied after seeding, so seed data is not
-    checked by the validator.
-  - Performance optimization, transactions and replication are not
-    yet implemented.
 
 
 ---------------------------------------------------------------------
 11. FUTURE WORK
 ---------------------------------------------------------------------
-  1. Generate 100,000+ documents and compare query speed before and
-     after indexing using explain("executionStats").
-  2. Implement like/unlike and follow/unfollow as multi-document
-     transactions so that the record and the counter change
-     together or not at all.
-  3. Configure a 3-node replica set and demonstrate automatic
+  1. Configure a 3-node replica set and demonstrate automatic
      failover.
-  4. Add TTL indexes for old activity logs and text indexes for
+  2. Add TTL indexes for old activity logs and text indexes for
      searching posts.
 
 =====================================================================
