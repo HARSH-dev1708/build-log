@@ -1,7 +1,6 @@
 =====================================================================
  SOCIAL MEDIA ANALYTICS AND USER ACTIVITY SYSTEM
  A MongoDB Database Project
-=====================================================================
 
 Author: Harsh Kumar
 
