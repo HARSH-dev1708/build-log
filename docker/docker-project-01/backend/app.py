@@ -11,7 +11,6 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-REGNO = os.getenv("REGNO", "NOT-SET")
 APP_VERSION = os.getenv("APP_VERSION", "dev")
 
 TABLE_SQL = """CREATE TABLE IF NOT EXISTS registrations (
@@ -59,7 +58,7 @@ def health():
         database = True
     except psycopg2.Error:
         database = False
-    return jsonify(service="festpass-backend", regno=REGNO,
+    return jsonify(service="festpass-backend",
                    version=APP_VERSION,
                    container=socket.gethostname(), database=database)
 
@@ -88,3 +87,4 @@ if __name__ == "__main__":
     # Exit promptly on `docker stop` instead of waiting to be killed.
     signal.signal(signal.SIGTERM, lambda *_: sys.exit(0))
     app.run(host="0.0.0.0", port=5000)
+

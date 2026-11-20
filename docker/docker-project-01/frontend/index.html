@@ -28,7 +28,7 @@
       const status = document.getElementById("status");
       try {
         const h = await api("health");
-        status.textContent = `REGNO ${h.regno} | backend ${h.version} on ${h.container} | database ${h.database ? "connected" : "not connected"}`;
+        status.textContent = `backend ${h.version} on ${h.container} | database ${h.database ? "connected" : "not connected"}`;
         const rows = await api("registrations");
         document.getElementById("list").replaceChildren(...(Array.isArray(rows) ? rows : []).map(r => {
           const li = document.createElement("li");
@@ -56,3 +56,4 @@
   </script>
 </body>
 </html>
+
