@@ -66,7 +66,7 @@ Stop it with `docker compose down`. Add `-v` only if you also want to delete the
 
 - [x] Phase 1: containerise the backend
 - [x] Phase 2: compose the three-tier stack
-- [ ] Phase 3: scan with Trivy and fix the findings
+- [x] Phase 3: scan with Trivy and fix the findings
 - [ ] Phase 4: version and publish to Docker Hub
 - [ ] Phase 5: sign with cosign and verify
 - [ ] Phase 6: final write-up
@@ -103,3 +103,33 @@ The frontend cannot even resolve the name `db`, because it shares no network wit
 **Persistence.**
 
 - [x] Registrations survive `docker compose down` followed by `docker compose up -d`
+
+## Phase 3: scan and fix
+
+Scanner: Trivy. The first image used `python:3.9`, which is end-of-life, so its Debian layer was stuck at 13.1.
+
+| | 0.1 (before) | 0.2 (after) |
+|---|---|---|
+| Base image | python:3.9 (Debian 13.1) | python:3.13-slim (Debian 13.8) |
+| CRITICAL | 236 | 0 |
+| HIGH | 2,677 | 58 |
+| Image size | 1.61 GB | 208 MB |
+| Runs as | root | appuser (uid 10001) |
+| Flask / Werkzeug | 2.2.2 / 2.2.2 | 3.1.3 / 3.1.9 |
+
+Counting only findings that have a fix available, the 0.1 image had 233 CRITICAL and 2,485 HIGH.
+
+Gate check, exit code 0 means no fixable CRITICAL:
+
+```
+trivy image --severity CRITICAL --ignore-unfixed --exit-code 1 fest-backend:0.2
+```
+
+**What changed and why.** A newer slim base image removed most findings in one step, because the OS layer was the source of almost all of them. Flask and Werkzeug were upgraded to the highest fixed versions the scan listed. The app now runs as a non-root user.
+
+**Known remaining findings.**
+
+- Some Debian packages are marked `affected` or `fix_deferred`, meaning no patched version exists yet. They will clear on a future rebuild.
+- The remaining Python HIGH findings are in libraries bundled inside pip itself (urllib3 and msgpack, confirmed under `pip/_vendor`, and setuptools 70.3.0, listed in pip's `vendor.txt`). They are not in `requirements.txt`, so they cannot be upgraded from this project. Risk is low because pip only runs at build time and nothing at runtime calls it. Accepted and documented.
+
+
