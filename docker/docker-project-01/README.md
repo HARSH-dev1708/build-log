@@ -67,7 +67,7 @@ Stop it with `docker compose down`. Add `-v` only if you also want to delete the
 - [x] Phase 1: containerise the backend
 - [x] Phase 2: compose the three-tier stack
 - [x] Phase 3: scan with Trivy and fix the findings
-- [ ] Phase 4: version and publish to Docker Hub
+- [x] Phase 4: version and publish to Docker Hub
 - [ ] Phase 5: sign with cosign and verify
 - [ ] Phase 6: final write-up
 
@@ -132,4 +132,20 @@ trivy image --severity CRITICAL --ignore-unfixed --exit-code 1 fest-backend:0.2
 - Some Debian packages are marked `affected` or `fix_deferred`, meaning no patched version exists yet. They will clear on a future rebuild.
 - The remaining Python HIGH findings are in libraries bundled inside pip itself (urllib3 and msgpack, confirmed under `pip/_vendor`, and setuptools 70.3.0, listed in pip's `vendor.txt`). They are not in `requirements.txt`, so they cannot be upgraded from this project. Risk is low because pip only runs at build time and nothing at runtime calls it. Accepted and documented.
 
+
+
+## Phase 4: published to Docker Hub
+
+Image: https://hub.docker.com/r/icyyharsh/fest-backend
+
+| Tag | Meaning |
+|---|---|
+| `1.0.0` | exact release |
+| `1.0` | moving pointer to the newest 1.0.x |
+
+Never `latest`: it says nothing about what you are running.
+
+Digest of 1.0.0 as pushed: sha256:3cb4e4b41f5d9c0c922d87195aefa708214d4e0859d494c619713bd8c05a1291
+
+The version is passed at build time (`--build-arg APP_VERSION=1.0.0`) and stored in the image, so the page shows which backend is running.
 
