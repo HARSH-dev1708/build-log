@@ -2,8 +2,6 @@
 
 Three-tier app containerised with Docker Compose, scanned with Trivy (236 CRITICAL findings down to 0), published to Docker Hub and signed with cosign. 
 The app is a registration page for a tech fest.
-(Get-Content README.md -Raw) -replace '\[ \] Phase 6', '[x] Phase 6' | Set-Content README.md
-![FestPass running from the signed 1.0.0 image](screenshots/festpass-running.png)
 
 The project focuses on the software supply chain: build the image, scan it, publish it, and prove it is the one I built.
 
