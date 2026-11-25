@@ -68,7 +68,7 @@ Stop it with `docker compose down`. Add `-v` only if you also want to delete the
 - [x] Phase 2: compose the three-tier stack
 - [x] Phase 3: scan with Trivy and fix the findings
 - [x] Phase 4: version and publish to Docker Hub
-- [ ] Phase 5: sign with cosign and verify
+- [x] Phase 5: sign with cosign and verify
 - [ ] Phase 6: final write-up
 
 ## Phase 1: backend image
@@ -148,4 +148,22 @@ Never `latest`: it says nothing about what you are running.
 Digest of 1.0.0 as pushed: sha256:3cb4e4b41f5d9c0c922d87195aefa708214d4e0859d494c619713bd8c05a1291
 
 The version is passed at build time (`--build-arg APP_VERSION=1.0.0`) and stored in the image, so the page shows which backend is running.
+
+
+## Phase 5: signing with cosign
+
+Images are signed by digest with a cosign key pair. The public key (`cosign.pub`) is in this repo. The private key stays on my machine and is git-ignored.
+
+```
+cosign verify --key cosign.pub icyyharsh/fest-backend@sha256:3cb4e4b41f5d9c0c922d87195aefa708214d4e0859d494c619713bd8c05a1291
+```
+
+| Release | Signed | `cosign verify` |
+|---|---|---|
+| 1.0.0 | yes | passes |
+| 1.0.1 | no | rejected: no signature found |
+
+The signature belongs to the digest, not the tag, so retagging cannot make an unsigned image look signed.
+
+Docker Content Trust (`docker trust`) is being retired, so cosign is used instead.
 
