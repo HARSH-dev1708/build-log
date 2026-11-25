@@ -1,6 +1,9 @@
 # FestPass: containerised three-tier app
 
-A hands-on DevOps project that takes a small web app from "runs on a laptop" to a scanned, versioned and signed container image. The app is a registration page for a tech fest.
+Three-tier app containerised with Docker Compose, scanned with Trivy (236 CRITICAL findings down to 0), published to Docker Hub and signed with cosign. 
+The app is a registration page for a tech fest.
+(Get-Content README.md -Raw) -replace '\[ \] Phase 6', '[x] Phase 6' | Set-Content README.md
+![FestPass running from the signed 1.0.0 image](screenshots/festpass-running.png)
 
 The project focuses on the software supply chain: build the image, scan it, publish it, and prove it is the one I built.
 
@@ -69,7 +72,7 @@ Stop it with `docker compose down`. Add `-v` only if you also want to delete the
 - [x] Phase 3: scan with Trivy and fix the findings
 - [x] Phase 4: version and publish to Docker Hub
 - [x] Phase 5: sign with cosign and verify
-- [ ] Phase 6: final write-up
+- [x] Phase 6: final write-up
 
 ## Phase 1: backend image
 
