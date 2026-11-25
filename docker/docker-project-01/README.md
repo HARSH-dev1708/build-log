@@ -170,3 +170,36 @@ The signature belongs to the digest, not the tag, so retagging cannot make an un
 
 Docker Content Trust (`docker trust`) is being retired, so cosign is used instead.
 
+
+## What I learned
+
+**Scanning and fixing**
+
+- Almost all the vulnerabilities came from the base image, not from my code. `python:3.9` is end-of-life, so its Debian layer was stuck at 13.1. Moving to `python:3.13-slim` (Debian 13.8) took the image from 236 CRITICAL findings to 0 and from 1.61 GB to 208 MB. One base-image change did more than all the library upgrades combined.
+- The "Fixed Version" column tells you where the fix lives. A PyPI-style version (like Werkzeug 3.1.9) means change `requirements.txt`. A Debian-style version means change the base image.
+- Not every finding is mine to fix. The remaining Python HIGH findings are libraries bundled inside pip itself (I confirmed their location under `pip/_vendor`). pip only runs at build time, so I accepted and documented them instead of chasing them.
+- `--ignore-unfixed` is what makes a scan usable as a pass/fail gate. Findings marked `affected` or `fix_deferred` have no patch yet, so failing a build over them would just be noise.
+
+**Building the image**
+
+- Layer order matters for caching: dependencies are installed before the code is copied, so a code change doesn't reinstall every library.
+- An image is a snapshot. Editing `app.py` did not change a container that was already built or running. I had to rebuild.
+- Running as a non-root user costs two lines and limits what an attacker gets if the app is compromised.
+
+**Compose and networking**
+
+- Two networks enforce "only the backend talks to the database". I proved it instead of assuming it: `ping db` fails from the frontend and the backend still reaches the database.
+- Compose names a project after its folder, so two copies of a project in same-named folders can share volumes. I use `-p` for throwaway test stacks.
+
+**Publishing and signing**
+
+- A tag is a movable label. A digest is a fingerprint of the exact contents. That is why I sign the digest, not the tag.
+- Docker Hub accepts any image I push, signed or not. Signing does not block anything. It lets someone detect an image I did not sign, but only if they run `cosign verify`.
+- My Docker Hub login and my cosign private key are separate secrets. Stealing one does not give an attacker the other, and that is the point of signing.
+- Secrets stay out of Git. `.env` and `cosign.key` are ignored, and I searched the full history to confirm neither was ever committed. A fresh clone from GitHub is the real test that the repo is complete.
+
+## What I would do next
+
+- Run the backend with a production server such as gunicorn instead of Flask's built-in development server (the container logs warn about this).
+- Add a deploy step that runs `cosign verify` and only then runs `docker compose up`, so verification is enforced, not optional.
+- Rebuild and rescan on a schedule, since new vulnerabilities are published every day.
